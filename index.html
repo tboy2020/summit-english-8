@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0b1220">
+<meta name="description" content="Summit English 8 — master Grade-8 reading, vocabulary, grammar and argument with instant explanations.">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>Summit English 8</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Lora:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b1220; --bg2:#0f1a30; --card:#16223d; --card2:#1c2a49;
+    --line:#26365c; --ink:#e8eefc; --muted:#9aabcf; --faint:#6a7da6;
+    --amber:#fbbf24; --amber-d:#d99706; --emerald:#34d399; --emerald-d:#10a877; --rose:#fb7185; --sky:#38bdf8; --indigo:#818cf8;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{margin:0; font-family:'Inter',system-ui,sans-serif; color:var(--ink);
+    background:radial-gradient(120% 80% at 50% -10%, var(--bg2), var(--bg) 70%) fixed; overflow:hidden; -webkit-user-select:none; user-select:none;}
+  .app{height:100%; max-width:720px; margin:0 auto; display:flex; flex-direction:column; padding:14px 16px 16px;}
+  .screen{flex:1; display:none; flex-direction:column; min-height:0;}
+  .screen.on{display:flex;}
+  .scrolly{flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif; margin:0; font-weight:700;}
+
+  .top{display:flex; align-items:center; gap:10px; margin-bottom:14px; flex:0 0 auto;}
+  .logo{font-family:'Space Grotesk'; font-weight:700; font-size:19px; letter-spacing:-.3px; display:flex; align-items:center; gap:8px; white-space:nowrap;}
+  .logo .mk{width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg,var(--amber),var(--sky)); display:flex; align-items:center; justify-content:center; font-size:15px; color:#0b1220;}
+  .logo small{color:var(--muted); font-weight:500; font-size:15px;}
+  .iconbtn{width:42px; height:42px; border:1px solid var(--line); background:var(--card); color:var(--ink); border-radius:12px; cursor:pointer; font-size:17px;}
+  .iconbtn:active{transform:translateY(1px);}
+  .spacer{flex:1;}
+  .pctchip{border:1px solid var(--line); background:var(--card); border-radius:999px; padding:6px 14px; font-weight:700; font-size:14px; font-family:'Space Grotesk';}
+  .pctchip b{color:var(--amber);}
+
+  .hero{background:linear-gradient(135deg,var(--card2),var(--card)); border:1px solid var(--line); border-radius:18px; padding:20px; margin-bottom:16px;}
+  .hero h2{font-size:21px; margin-bottom:4px;}
+  .hero p{color:var(--muted); font-size:14px; margin:0 0 14px; line-height:1.5;}
+  .bar{height:12px; border-radius:999px; background:#0c1526; overflow:hidden; border:1px solid var(--line);}
+  .bar>i{display:block; height:100%; background:linear-gradient(90deg,var(--amber),var(--sky)); width:0;}
+  .herorow{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;}
+  .btn{border:none; cursor:pointer; font-family:'Space Grotesk'; font-weight:700; font-size:15px; border-radius:12px; padding:12px 18px;}
+  .btn.primary{background:var(--amber); color:#241a02; box-shadow:0 4px 0 var(--amber-d);}
+  .btn.primary:active{transform:translateY(3px); box-shadow:0 1px 0 var(--amber-d);}
+  .btn.soft{background:var(--card); border:1px solid var(--line); color:var(--ink);}
+  .btn.soft:active{transform:translateY(1px);}
+
+  .domain{margin-bottom:18px;}
+  .domain h3{font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--faint); margin-bottom:9px;}
+  .domain h3 .std{color:var(--amber); font-weight:600;}
+  .skill{display:flex; align-items:center; gap:12px; width:100%; text-align:left; cursor:pointer; background:var(--card); border:1px solid var(--line); border-radius:13px; padding:13px 14px; margin-bottom:8px; color:var(--ink);}
+  .skill:active{transform:translateY(1px);}
+  .skill .nm{flex:1; font-weight:600; font-size:15px;}
+  .meter{display:flex; gap:4px;}
+  .dot{width:9px; height:9px; border-radius:50%; background:#2c3d66; border:1px solid #3a4e7e;}
+  .dot.on{background:var(--amber); border-color:var(--amber-d);}
+  .skill.done{border-color:var(--amber-d);}
+  .skill .tag{font-size:11px; font-weight:700; color:var(--amber); font-family:'Space Grotesk';}
+
+  .pwrap{flex:1; display:flex; flex-direction:column; min-height:0;}
+  .phead{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+  .phead .nm{font-family:'Space Grotesk'; font-weight:700; font-size:16px;}
+  .pips{display:flex; gap:6px; margin-left:auto;}
+  .pip{width:13px; height:13px; border-radius:50%; background:#2c3d66; border:1px solid #3a4e7e;}
+  .pip.on{background:var(--amber); border-color:var(--amber-d);}
+  .qcard{flex:0 1 auto; display:flex; flex-direction:column; background:var(--card); border:1px solid var(--line); border-radius:18px; padding:18px; min-height:0; overflow-y:auto;}
+  .passage{background:#0c1526; border:1px solid var(--line); border-left:3px solid var(--sky); border-radius:10px; padding:13px 15px; margin-bottom:14px; font-family:'Lora',Georgia,serif; font-size:15.5px; line-height:1.6; color:#d6e2fb; max-height:38vh; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+  .passage .ttl{font-family:'Space Grotesk'; font-weight:700; font-size:13px; color:var(--sky); letter-spacing:.04em; text-transform:uppercase; margin-bottom:6px;}
+  .qwhy{color:var(--muted); font-size:13px; margin-bottom:8px;}
+  .qtext{font-size:clamp(17px,4.6vw,21px); font-weight:600; line-height:1.45;}
+  .qfocus{font-family:'Lora',Georgia,serif; font-style:italic; color:#fff; font-size:18px; margin:10px 0; padding-left:12px; border-left:2px solid var(--amber);}
+  .choices{display:flex; flex-direction:column; gap:10px; margin-top:16px;}
+  .choice{border:2px solid var(--line); background:#0c1526; color:var(--ink); border-radius:12px; padding:14px 15px; cursor:pointer; font-size:15.5px; font-weight:500; text-align:left; line-height:1.4;}
+  .choice:active{transform:translateY(1px);}
+  .choice{position:relative;}
+  .choice.good{border-color:var(--emerald); background:rgba(52,211,153,.12);}
+  .choice.bad{border-color:var(--rose); background:rgba(251,113,133,.1);}
+  .choice.good::after{content:"\2713"; position:absolute; right:12px; top:50%; transform:translateY(-50%); color:var(--emerald); font-weight:700;}
+  .choice.bad::after{content:"\2717"; position:absolute; right:12px; top:50%; transform:translateY(-50%); color:var(--rose); font-weight:700;}
+  .logo{min-width:0;} .logo small{overflow:hidden; text-overflow:ellipsis;}
+  @media (max-width:360px){ .top{gap:8px;} .logo{font-size:17px;} .logo small{display:none;} .pctchip{padding:6px 10px; font-size:13px;} }
+  @media (max-height:480px){ .footer{display:none;} .top{margin-bottom:8px;} .passage{max-height:30vh;} }
+  .exp{margin-top:14px; background:#0c1526; border:1px solid var(--line); border-radius:12px; padding:14px 16px; display:none;}
+  .exp.show{display:block;}
+  .exp .st{font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--amber); font-weight:700; margin-bottom:7px; font-family:'Space Grotesk';}
+  .exp p{margin:0; font-size:15px; line-height:1.55; color:var(--ink);}
+  .exp b{color:var(--ink);}
+  .pbtns{display:flex; gap:10px; margin-top:auto; padding-top:12px; flex:0 0 auto;}
+  #skipBtn{flex:1;}
+  .fb{min-height:20px; text-align:center; font-weight:700; font-family:'Space Grotesk'; margin-top:10px;}
+  .fb.good{color:var(--emerald);} .fb.bad{color:var(--rose);}
+
+  .overlay{position:fixed; inset:0; background:rgba(6,11,22,.7); display:none; align-items:center; justify-content:center; padding:18px; z-index:80;}
+  .overlay.open{display:flex;}
+  .sheet{width:100%; max-width:440px; background:var(--card); border:1px solid var(--line); color:var(--ink); border-radius:18px; padding:20px;}
+  .statline{display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--line); font-size:14px;}
+  .row{display:flex; gap:10px; margin-top:16px;}
+  .toast{position:fixed; left:50%; bottom:6%; transform:translateX(-50%) translateY(12px); background:#0c1526; border:1px solid var(--line); color:var(--ink); padding:12px 18px; border-radius:12px; font-weight:700; font-family:'Space Grotesk'; opacity:0; transition:all .3s; z-index:60; max-width:88%; text-align:center;}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  .confetti{position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:50;}
+  .conf{position:absolute; font-size:16px; animation:fall 1.1s ease-out forwards;}
+  @keyframes fall{0%{transform:translateY(0) rotate(0);opacity:1;}100%{transform:translateY(-200px) rotate(200deg);opacity:0;}}
+  .hidden{display:none !important;}
+  .footer{text-align:center; font-size:11px; color:var(--faint); padding-top:10px; flex:0 0 auto;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <button class="iconbtn hidden" id="backBtn">←</button>
+    <div class="logo"><span class="mk">✦</span> Summit <small>English 8</small></div>
+    <div class="spacer"></div>
+    <div class="pctchip">Mastery <b id="pctNum">0%</b></div>
+    <button class="iconbtn" id="gearBtn">⚙️</button>
+  </div>
+
+  <div class="screen on" id="scr-home">
+    <div class="scrolly">
+      <div class="hero">
+        <h2 id="heroTitle">Let's master Grade 8 English.</h2>
+        <p id="heroSub">Reading, vocabulary, grammar and argument — every answer comes with a clear explanation.</p>
+        <div class="bar"><i id="heroBar"></i></div>
+        <div class="herorow">
+          <button class="btn primary" id="continueBtn">Continue ▶</button>
+          <button class="btn soft" id="diagBtn">Shuffle practice</button>
+        </div>
+      </div>
+      <div id="domains"></div>
+    </div>
+  </div>
+
+  <div class="screen" id="scr-practice">
+    <div class="pwrap">
+      <div class="phead"><span class="nm" id="pName">Skill</span><span class="pips" id="pPips"></span></div>
+      <div class="qcard">
+        <div class="passage hidden" id="qPassage"></div>
+        <div class="qwhy" id="qWhy"></div>
+        <div class="qtext" id="qText"></div>
+        <div class="qfocus hidden" id="qFocus"></div>
+        <div class="choices" id="choices"></div>
+        <div class="fb" id="pFb"></div>
+        <div class="exp" id="pExp"></div>
+      </div>
+      <div class="pbtns">
+        <button class="btn soft" id="skipBtn">Skip</button>
+        <button class="btn soft" id="nextBtn" style="flex:1; display:none;">Next ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">Summit English 8 · Glory to God alone · AMHG</div>
+</div>
+
+<div class="confetti" id="confetti"></div>
+<div class="toast" id="toast"></div>
+<div class="overlay" id="overlay">
+  <div class="sheet">
+    <h2>Your progress</h2>
+    <div id="dashStats"></div>
+    <div class="row">
+      <button class="btn soft" id="resetBtn" style="flex:1; color:var(--rose);">Reset progress</button>
+      <button class="btn primary" id="doneBtn" style="flex:1;">Done</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(id){ return document.getElementById(id); };
+  function loadJSON(k,d){ try{ var v=localStorage.getItem(k); return v===null?d:JSON.parse(v); }catch(e){ return d; } }
+  function saveJSON(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+  var KEY="summiteng8_v1"; var P=loadJSON(KEY,{sk:{}}); function persist(){ saveJSON(KEY,P); }
+  function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+  function shuffle(a){ a=a.slice(); var i,j,t; for(i=a.length-1;i>0;i--){ j=Math.floor(Math.random()*(i+1)); t=a[i];a[i]=a[j];a[j]=t; } return a; }
+  var MASTER=4;
+
+  /* ===== ITEM BANKS (a = the exact correct choice string) ===== */
+  var PASSAGE_OCEAN={ttl:"The Deep Ocean", text:"More people have walked on the Moon than have visited the deepest part of the ocean. The Mariana Trench plunges nearly 11 kilometres below the surface, where the water pressure would crush a submarine built for shallower seas. Yet life thrives there: pale, eyeless creatures drift through the cold dark, feeding on scraps that sink from far above. Scientists keep returning, convinced that these crushing depths still hide secrets worth the risk."};
+  var PASSAGE_BIKE={ttl:"The First Ride", text:"Maya had practised in the empty car park for weeks, her father jogging beside her with one hand hovering near the seat. On Saturday he let go without telling her. She pedalled on, wobbling, certain he was still holding — until she heard him clapping far behind. For one terrifying second she forgot how to breathe. Then she realised she was doing it, truly doing it, and a laugh burst out of her like sunlight."};
+  var PASSAGE_BEES={ttl:"Why Bees Matter", text:"A single honeybee may seem unimportant, but together bees pollinate roughly a third of the food we eat. When a bee moves from flower to flower gathering nectar, it carries pollen that lets plants produce fruit and seeds. Without that quiet work, apples, almonds and countless other crops would fail. That is why the recent decline in bee populations worries scientists far more than most people realise."};
+
+  var MAINIDEA=[
+    {p:PASSAGE_OCEAN, q:"What is the central idea of the passage?", a:"The ocean's deepest places are extreme, barely explored, and still full of mysteries.", choices:["The ocean's deepest places are extreme, barely explored, and still full of mysteries.","Submarines are stronger than spacecraft.","Most sea creatures live near the surface.","The Moon is harder to reach than the ocean floor."], exp:"The whole passage builds the idea that the deep ocean is extreme and mysterious — the other options are small details or not supported."},
+    {p:PASSAGE_BEES, q:"Which sentence best states the main idea?", a:"Bees are essential because they pollinate much of our food.", choices:["Bees are essential because they pollinate much of our food.","Honeybees gather nectar from flowers.","Apples and almonds are popular crops.","Scientists study many kinds of insects."], exp:"The passage centres on WHY bees matter — their pollination of our food. The others are supporting details."}
+  ];
+  var EVIDENCE=[
+    {p:PASSAGE_OCEAN, q:"Which detail best supports the idea that the deep ocean is dangerous to explore?", a:"The water pressure would crush a submarine built for shallower seas.", choices:["The water pressure would crush a submarine built for shallower seas.","Pale, eyeless creatures drift through the dark.","Scientists keep returning to the trench.","It is nearly 11 kilometres deep."], exp:"Danger is shown most directly by the pressure that would 'crush a submarine.' Depth alone doesn't state the danger as clearly."},
+    {p:PASSAGE_BIKE, q:"Which detail best shows that Maya succeeded on her own?", a:"She heard him clapping far behind.", choices:["She heard him clapping far behind.","Her father jogged beside her for weeks.","She had practised in the car park.","She forgot how to breathe."], exp:"Hearing him clapping 'far behind' proves he had let go and she was riding alone."}
+  ];
+  var INFERENCE=[
+    {p:PASSAGE_BIKE, q:"What can you infer about Maya at the end?", a:"She feels proud and thrilled that she can ride by herself.", choices:["She feels proud and thrilled that she can ride by herself.","She is angry her father let go.","She wants to stop riding.","She still cannot balance."], exp:"The laugh 'like sunlight' and 'truly doing it' imply joy and pride — nothing suggests anger or failure."},
+    {p:PASSAGE_BEES, q:"The passage suggests that the decline in bees is a problem mainly because —", a:"it threatens the food supply we depend on.", choices:["it threatens the food supply we depend on.","bees are becoming less colourful.","people dislike insects.","nectar is running out."], exp:"Since bees pollinate a third of our food, their decline threatens that food supply — the author's central concern."}
+  ];
+  var STRUCTURE=[
+    {q:"A paragraph opens: 'There are three reasons recycling matters.' What text structure does this signal?", a:"A list of reasons (enumeration)", choices:["A list of reasons (enumeration)","A story told in time order","A comparison of two things","A description of a place"], exp:"Announcing 'three reasons' signals an enumerated list of reasons — not a narrative, comparison, or description."},
+    {q:"An author writes about a city 'then' and 'now,' switching back and forth. This structure is —", a:"compare and contrast", choices:["compare and contrast","chronological narrative","problem and solution","spatial description"], exp:"Showing 'then' vs 'now' side by side is compare and contrast."},
+    {q:"A passage describes a flood, then explains what caused it and what resulted. This structure is —", a:"cause and effect", choices:["cause and effect","compare and contrast","description","sequence of steps"], exp:"Explaining the causes and results of an event is cause-and-effect structure."},
+    {q:"A text names a difficulty, then offers a way to fix it. This structure is —", a:"problem and solution", choices:["problem and solution","compare and contrast","chronological order","description"], exp:"Stating a problem and then its fix is problem-and-solution structure."}
+  ];
+
+  var CONTEXT=[
+    {f:"The hikers were famished after the long climb, so they devoured their sandwiches in minutes.", q:"In this sentence, famished most nearly means —", a:"very hungry", choices:["very hungry","exhausted","lost","cheerful"], exp:"'Devoured their sandwiches in minutes' is the clue — famished means very hungry."},
+    {f:"Her argument was so cogent that even her opponents nodded in agreement.", q:"Cogent most nearly means —", a:"convincing", choices:["convincing","confusing","quiet","lengthy"], exp:"If opponents nod in agreement, the argument was convincing (cogent)."},
+    {f:"The once-busy factory now stood derelict, its windows shattered and doors hanging open.", q:"Derelict most nearly means —", a:"abandoned and run-down", choices:["abandoned and run-down","brand new","crowded","expensive"], exp:"Shattered windows and open doors signal an abandoned, run-down (derelict) building."},
+    {f:"He gave only a cursory glance at the report before signing it.", q:"Cursory most nearly means —", a:"quick and not thorough", choices:["quick and not thorough","careful and slow","angry","friendly"], exp:"A 'glance' before quickly signing shows cursory means quick and not thorough."},
+    {f:"The committee reached a consensus, and every member supported the final plan.", q:"Consensus most nearly means —", a:"general agreement", choices:["general agreement","a loud argument","a single leader","a written law"], exp:"'Every member supported' shows consensus is general agreement."}
+  ];
+  var ROOTS=[
+    {q:"The prefix in 'misinterpret' tells you the action was done —", a:"wrongly", choices:["wrongly","again","before","too much"], exp:"The prefix 'mis-' means wrongly or badly."},
+    {q:"The root 'port' (as in transport, portable, export) means —", a:"to carry", choices:["to carry","to see","to write","to break"], exp:"'Port' means carry — trans-port = carry across, portable = able to be carried."},
+    {q:"'Benevolent' contains 'bene-'. This word part means —", a:"good / well", choices:["good / well","bad","large","two"], exp:"'Bene-' means good or well (benevolent = well-meaning, kind)."},
+    {q:"The suffix '-less' in 'fearless' means —", a:"without", choices:["without","full of","able to","the study of"], exp:"'-less' means without; fearless = without fear."},
+    {q:"The root 'spect' (inspect, spectator, spectacle) means —", a:"to look / see", choices:["to look / see","to hear","to move","to join"], exp:"'Spect' means look or see — a spectator looks on."}
+  ];
+  var WORDCHOICE=[
+    {q:"Choose the most precise word: 'The scientist ___ the results after months of careful testing.' ", a:"confirmed", choices:["confirmed","said","got","did"], exp:"'Confirmed' is the most precise, academic choice for verifying results."},
+    {q:"Which word gives the most formal tone? 'The data ___ that the theory is correct.'", a:"demonstrates", choices:["demonstrates","shows off","kind of proves","tells"], exp:"'Demonstrates' is precise and formal; the others are vague or too casual."}
+  ];
+
+  var SVA=[
+    {q:"Choose the correct verb: 'Each of the students ___ a laptop.'", a:"has", choices:["has","have","are having","were"], exp:"'Each' is singular, so it takes the singular verb 'has.'"},
+    {q:"Choose the correct verb: 'The list of ingredients ___ on the box.'", a:"is", choices:["is","are","were","have been"], exp:"The subject is 'list' (singular), not 'ingredients,' so use 'is.'"},
+    {q:"Choose the correct verb: 'Neither the coach nor the players ___ ready.'", a:"are", choices:["are","is","was","has been"], exp:"With 'neither...nor,' the verb agrees with the nearer subject, 'players' (plural) → 'are.'"}
+  ];
+  var VERBALS=[
+    {q:"In 'Running is good exercise,' the word 'Running' is a —", a:"gerund (verb form acting as a noun)", choices:["gerund (verb form acting as a noun)","participle describing a noun","infinitive","main verb"], exp:"'Running' is the subject here — a verb form acting as a noun, so it's a gerund."},
+    {q:"In 'The broken window let in the cold,' the word 'broken' is a —", a:"participle (describing a noun)", choices:["participle (describing a noun)","gerund","infinitive","adverb"], exp:"'Broken' describes 'window,' so it's a participle acting like an adjective."},
+    {q:"In 'She wants to learn Spanish,' the phrase 'to learn' is an —", a:"infinitive", choices:["infinitive","gerund","participle","preposition"], exp:"'To + verb' is an infinitive."}
+  ];
+  var VOICE=[
+    {q:"Which sentence is in the ACTIVE voice?", a:"The committee approved the budget.", choices:["The committee approved the budget.","The budget was approved by the committee.","The budget was approved.","Approval was given to the budget."], exp:"In active voice the subject does the action: 'The committee approved...'"},
+    {q:"Rewrite in active voice: 'The window was broken by the storm.'", a:"The storm broke the window.", choices:["The storm broke the window.","The window broke by the storm.","The window, broken, by the storm.","It was the storm that the window was broken by."], exp:"Make the doer (the storm) the subject: 'The storm broke the window.'"}
+  ];
+  var COMMAS=[
+    {q:"Which sentence is punctuated correctly?", a:"After the long hike, we rested by the river.", choices:["After the long hike, we rested by the river.","After the long hike we rested, by the river.","After, the long hike we rested by the river.","After the long hike we rested by the river,"], exp:"A comma follows an introductory phrase ('After the long hike')."},
+    {q:"Choose the correct relative pronoun: 'My brother, ___ lives in Lagos, is a doctor.'", a:"who", choices:["who","which","whom","that"], exp:"Use 'who' for a person in this nonrestrictive clause set off by commas."},
+    {q:"Which uses commas correctly for a list?", a:"We bought apples, bread, and cheese.", choices:["We bought apples, bread, and cheese.","We bought apples bread and cheese.","We bought, apples, bread and cheese.","We bought apples, bread and, cheese."], exp:"Separate list items with commas: apples, bread, and cheese."},
+    {q:"Which sentence uses a semicolon correctly?", a:"The storm knocked out the power; we lit candles and waited.", choices:["The storm knocked out the power; we lit candles and waited.","The storm knocked out the power; and we lit candles.","The storm knocked out the power; because the lines fell.","We lit candles; waiting for the power."], exp:"A semicolon joins two complete, closely related sentences (independent clauses) with no conjunction."}
+  ];
+  var ERROR=[
+    {q:"Find the sentence with an error.", a:"Their going to the game tomorrow.", choices:["Their going to the game tomorrow.","They're happy with the result.","Their team won the match.","The ball is theirs."], exp:"'Their' should be 'They're' (they are) going to the game."},
+    {q:"Which sentence has a subject-verb error?", a:"The box of chocolates were on the table.", choices:["The box of chocolates were on the table.","The box of chocolates was on the table.","The chocolates were on the table.","Each chocolate was wrapped."], exp:"The subject is 'box' (singular), not 'chocolates,' so it needs 'was.' Don't let the words between the subject and verb fool you."},
+    {q:"Which sentence has an error?", a:"Me and him went to the store.", choices:["Me and him went to the store.","He and I went to the store.","They went with us.","She gave it to him and me."], exp:"Subjects need subject pronouns: 'He and I went,' not 'Me and him went.'"}
+  ];
+
+  var ARG_EVID=[
+    {q:"Claim: 'Schools should start later in the morning.' Which is the STRONGEST evidence?", a:"A sleep study found teens who started school an hour later scored higher and missed fewer days.", choices:["A sleep study found teens who started school an hour later scored higher and missed fewer days.","My friends all hate waking up early.","Mornings are cold in winter.","Some famous people wake up late."], exp:"The strongest evidence is specific, relevant research data — not opinions or unrelated facts."},
+    {q:"Claim: 'Cities should add more bike lanes.' Which is the strongest evidence?", a:"Cities that added protected bike lanes saw cycling injuries drop by 40%.", choices:["Cities that added protected bike lanes saw cycling injuries drop by 40%.","Bikes are fun to ride.","I own three bikes.","Cars are sometimes noisy."], exp:"A measurable, relevant statistic (40% fewer injuries) directly supports the claim."}
+  ];
+  var ARG_COUNTER=[
+    {q:"Claim: 'Students should be allowed phones in class.' Which sentence is a COUNTERCLAIM?", a:"However, phones can distract students and lower their focus.", choices:["However, phones can distract students and lower their focus.","Phones help students look up facts quickly.","Many students already own phones.","Phones can be used as calculators."], exp:"A counterclaim argues the OTHER side — here, that phones distract. The others support the claim."},
+    {q:"Which sentence introduces a counterclaim?", a:"Critics argue that homework takes time away from family and rest.", choices:["Critics argue that homework takes time away from family and rest.","Homework helps students review the lesson.","Homework builds good study habits.","Teachers assign homework daily."], exp:"'Critics argue...' signals the opposing view — a counterclaim."}
+  ];
+  var ARG_CLAIM=[
+    {q:"Which sentence is a CLAIM (an arguable position), not just a fact?", a:"The school day should be shortened to improve learning.", choices:["The school day should be shortened to improve learning.","The school day is seven hours long.","Classes begin at 8 a.m.","There are 180 school days in the year."], exp:"A claim takes a debatable position ('should be shortened'); the others are plain facts."},
+    {q:"Which is the best thesis/claim for an argument essay?", a:"Plastic bags should be banned because they harm wildlife and pollute oceans.", choices:["Plastic bags should be banned because they harm wildlife and pollute oceans.","This essay is about plastic bags.","Plastic bags are made of plastic.","There are many kinds of bags."], exp:"A strong claim states a position AND previews reasons — the others are topics or facts."}
+  ];
+
+  var FIGTHEME=[
+    {p:PASSAGE_BIKE, q:"'A laugh burst out of her like sunlight' is an example of —", a:"a simile", choices:["a simile","a metaphor","hyperbole","personification"], exp:"A simile compares two things using 'like' or 'as' — a laugh is compared to sunlight with 'like.'"},
+    {q:"'The wind whispered through the trees.' This is an example of —", a:"personification", choices:["personification","simile","hyperbole","alliteration"], exp:"Giving the wind a human action ('whispered') is personification."},
+    {q:"'I've told you a million times to clean your room!' This is —", a:"hyperbole (exaggeration)", choices:["hyperbole (exaggeration)","a simile","a metaphor","personification"], exp:"'A million times' is deliberate exaggeration for effect — hyperbole."},
+    {q:"Which word has the most NEGATIVE connotation for someone who talks a lot?", a:"blabbermouth", choices:["blabbermouth","talkative","chatty","expressive"], exp:"All describe talking, but 'blabbermouth' is the most negative; the others are neutral or positive."},
+    {p:PASSAGE_BIKE, q:"Which statement best expresses a THEME of the passage?", a:"Learning something new often means trusting yourself after others let go.", choices:["Learning something new often means trusting yourself after others let go.","Fathers should teach their children to ride bikes.","Riding a bike is dangerous for beginners.","Practice happens in empty car parks."], exp:"A theme is a universal message. Maya succeeds the moment her father lets go — the passage is about self-trust and independence, not the literal plot."}
+  ];
+  var MODMOOD=[
+    {q:"Which sentence has a MISPLACED or dangling modifier?", a:"Walking to school, the rain soaked Maria.", choices:["Walking to school, the rain soaked Maria.","Walking to school, Maria got soaked by the rain.","Maria got soaked by the rain while walking to school.","The rain soaked Maria as she walked to school."], exp:"'Walking to school' should describe Maria, not the rain. As written, it says the rain was walking — the modifier dangles."},
+    {q:"Which sentence correctly uses the subjunctive mood?", a:"If I were taller, I could reach the shelf.", choices:["If I were taller, I could reach the shelf.","If I was taller, I could reach the shelf.","If I am taller, I could reach the shelf.","If I be taller, I could reach the shelf."], exp:"For a hypothetical, contrary-to-fact situation, the subjunctive uses 'were,' not 'was.'"},
+    {q:"Which sentence has a MISPLACED modifier?", a:"The waiter served a steak to the customer on a sizzling plate.", choices:["The waiter served a steak to the customer on a sizzling plate.","The waiter served a sizzling steak to the customer.","The customer received a sizzling steak.","On a sizzling plate, the steak reached the customer."], exp:"'On a sizzling plate' sits next to 'customer,' making it sound like the customer is on the plate. It should sit next to 'steak.'"},
+    {q:"Which verb mood gives a command? 'Please close the door.'", a:"imperative", choices:["imperative","indicative","subjunctive","conditional"], exp:"A sentence that gives a command or request is in the imperative mood."}
+  ];
+
+  /* ===== SKILL LADDER ===== */
+  function bankGen(bank){ return function(){ var it=pick(bank); return { passage:it.p, why:it._why, text:it.q, focus:it.f, mode:"mc", choices:it.choices, answer:it.a, exp:it.exp }; }; }
+  var DOMAINS=[
+    {dom:"Reading", std:"RL / RI.8", skills:[
+      {id:"mainidea", name:"Central idea", gen:bankGen(MAINIDEA)},
+      {id:"evidence", name:"Text evidence", gen:bankGen(EVIDENCE)},
+      {id:"inference", name:"Inference", gen:bankGen(INFERENCE)},
+      {id:"structure", name:"Text structure", gen:bankGen(STRUCTURE)},
+      {id:"figtheme", name:"Figurative language & theme", gen:bankGen(FIGTHEME)}]},
+    {dom:"Vocabulary", std:"L.8.4 / L.8.6", skills:[
+      {id:"context", name:"Context clues", gen:bankGen(CONTEXT)},
+      {id:"roots", name:"Roots & affixes", gen:bankGen(ROOTS)},
+      {id:"wordchoice", name:"Precise word choice", gen:bankGen(WORDCHOICE)}]},
+    {dom:"Grammar & Conventions", std:"L.8.1 / L.8.2", skills:[
+      {id:"sva", name:"Subject–verb agreement", gen:bankGen(SVA)},
+      {id:"verbals", name:"Verbals (gerund/participle)", gen:bankGen(VERBALS)},
+      {id:"voice", name:"Active & passive voice", gen:bankGen(VOICE)},
+      {id:"commas", name:"Commas & semicolons", gen:bankGen(COMMAS)},
+      {id:"modmood", name:"Modifiers & mood", gen:bankGen(MODMOOD)},
+      {id:"error", name:"Spot the error", gen:bankGen(ERROR)}]},
+    {dom:"Argument Writing", std:"W.8.1", skills:[
+      {id:"claim", name:"Claims vs facts", gen:bankGen(ARG_CLAIM)},
+      {id:"argevid", name:"Strongest evidence", gen:bankGen(ARG_EVID)},
+      {id:"counter", name:"Counterclaims", gen:bankGen(ARG_COUNTER)}]}
+  ];
+  var ALL=[]; for(var d0=0;d0<DOMAINS.length;d0++){ for(var s0=0;s0<DOMAINS[d0].skills.length;s0++){ ALL.push(DOMAINS[d0].skills[s0]); } }
+  function skById(id){ for(var i=0;i<ALL.length;i++){ if(ALL[i].id===id) return ALL[i]; } return null; }
+  function stOf(id){ if(!P.sk[id]) P.sk[id]={st:"open",streak:0,reps:0}; return P.sk[id]; }
+  function masteredCount(){ var n=0; for(var i=0;i<ALL.length;i++){ var s=P.sk[ALL[i].id]; if(s&&s.st==="mastered") n++; } return n; }
+  function pct(){ return Math.round(masteredCount()/ALL.length*100); }
+  function firstUnmastered(){ for(var i=0;i<ALL.length;i++){ var s=P.sk[ALL[i].id]; if(!s||s.st!=="mastered") return ALL[i].id; } return ALL[0].id; }
+
+  var stack=["home"]; var SCREENS=["home","practice"];
+  function cur(){ return stack[stack.length-1]; }
+  function render(){ var name=cur(); for(var i=0;i<SCREENS.length;i++){ $("scr-"+SCREENS[i]).classList.toggle("on", SCREENS[i]===name); }
+    $("backBtn").classList.toggle("hidden", stack.length<=1); $("pctNum").textContent=pct()+"%"; if(name==="home") paintHome(); }
+  function go(n){ stack.push(n); render(); }
+  function back(){ if(stack.length>1){ stack.pop(); render(); } }
+  $("backBtn").addEventListener("click", back);
+
+  function paintHome(){
+    $("heroBar").style.width=pct()+"%";
+    var done=masteredCount();
+    $("heroTitle").textContent = done===0?"Let's master Grade 8 English.":(done===ALL.length?"Summit reached. 🏔️":"Keep climbing.");
+    $("heroSub").textContent = done===0?"Reading, vocabulary, grammar and argument — every answer comes with a clear explanation.":(done+" of "+ALL.length+" skills mastered. Mastery = 4 in a row.");
+    var h="";
+    for(var d=0;d<DOMAINS.length;d++){ var dm=DOMAINS[d]; h+='<div class="domain"><h3>'+dm.dom+' <span class="std">'+dm.std+'</span></h3>';
+      for(var s=0;s<dm.skills.length;s++){ var sk=dm.skills[s]; var st=P.sk[sk.id]||{st:"open",streak:0};
+        var dots=""; for(var k=0;k<MASTER;k++){ dots+='<span class="dot'+(st.st==="mastered"||k<st.streak?" on":"")+'"></span>'; }
+        var tag=st.st==="mastered"?'<span class="tag">✓</span>':'<span class="meter">'+dots+'</span>';
+        h+='<button class="skill '+(st.st==="mastered"?"done":"")+'" data-sk="'+sk.id+'"><span class="nm">'+sk.name+'</span>'+tag+'</button>';
+      } h+='</div>';
+    }
+    $("domains").innerHTML=h;
+    var bs=$("domains").querySelectorAll("[data-sk]");
+    for(var b=0;b<bs.length;b++){ (function(el){ el.addEventListener("click", function(){ startPractice(el.getAttribute("data-sk")); }); })(bs[b]); }
+  }
+  $("continueBtn").addEventListener("click", function(){ startPractice(firstUnmastered()); });
+  $("diagBtn").addEventListener("click", function(){ startPractice(pick(ALL).id); });
+
+  var curId=null, Q=null, answered=false;
+  function startPractice(id){ curId=id; stack=["home","practice"]; render(); nextQ(); }
+  function renderPips(){ var s=stOf(curId); var h=""; for(var i=0;i<MASTER;i++){ h+='<span class="pip'+(i<(s.streak||0)?" on":"")+'"></span>'; } $("pPips").innerHTML=h; }
+  function nextQ(){
+    var sk=skById(curId); if(!sk){ back(); return; }
+    Q=sk.gen(); answered=false;
+    $("pName").textContent=sk.name;
+    if(Q.passage){ $("qPassage").classList.remove("hidden"); $("qPassage").innerHTML='<div class="ttl">'+Q.passage.ttl+'</div>'+Q.passage.text; }
+    else $("qPassage").classList.add("hidden");
+    $("qWhy").textContent=Q.why||"";
+    $("qText").innerHTML=Q.text||"";
+    if(Q.focus){ $("qFocus").classList.remove("hidden"); $("qFocus").textContent="“"+Q.focus+"”"; } else $("qFocus").classList.add("hidden");
+    $("pExp").classList.remove("show"); $("pExp").innerHTML="";
+    $("pFb").textContent=""; $("pFb").className="fb";
+    $("nextBtn").style.display="none"; $("skipBtn").style.display="";
+    renderPips();
+    var grid=$("choices"); grid.innerHTML=""; var ch=shuffle(Q.choices);
+    for(var i=0;i<ch.length;i++){ (function(val){ var b=document.createElement("button"); b.className="choice"; b.textContent=val;
+      b.addEventListener("click", function(){ if(answered) return; judge(val,b); }); grid.appendChild(b); })(ch[i]); }
+    try{ $("scr-practice").querySelector(".qcard").scrollTop=0; }catch(e){}
+  }
+  function judge(val, btn){
+    answered=true;
+    var s=stOf(curId); s.reps=(s.reps||0)+1;
+    var correct = String(val)===String(Q.answer);
+    var cs=$("choices").querySelectorAll(".choice");
+    for(var i=0;i<cs.length;i++){ if(cs[i].textContent===String(Q.answer)) cs[i].classList.add("good"); }
+    if(correct){ s.streak=(s.streak||0)+1; if(s.st!=="mastered") s.st="learning"; $("pFb").className="fb good"; $("pFb").textContent="Correct ✓"; confetti(6); }
+    else { btn.classList.add("bad"); s.streak=0; $("pFb").className="fb bad"; $("pFb").textContent="Not quite — here's why:"; }
+    renderPips();
+    $("pExp").innerHTML='<div class="st">Why</div><p>'+Q.exp+'</p>'; $("pExp").classList.add("show");
+    persist();
+    if(correct && s.streak>=MASTER && s.st!=="mastered"){ s.st="mastered"; persist(); setTimeout(masterSkill, 900); }
+    else { $("nextBtn").style.display=""; $("skipBtn").style.display="none"; try{ $("pExp").scrollIntoView({block:"nearest"}); }catch(e){} }
+  }
+  function masterSkill(){ var sk=skById(curId); toast("Mastered: "+sk.name); confetti(16);
+    setTimeout(function(){ var nx=firstUnmastered(); if(nx&&nx!==curId&&masteredCount()<ALL.length){ curId=nx; nextQ(); } else { stack=["home"]; render(); } }, 1000); }
+  $("nextBtn").addEventListener("click", nextQ);
+  $("skipBtn").addEventListener("click", nextQ);
+
+  function confetti(n){ var box=$("confetti"); var e=["✦","●","■","✧"]; var col=["#fbbf24","#34d399","#38bdf8","#818cf8"];
+    for(var i=0;i<n;i++){ var c=document.createElement("span"); c.className="conf"; c.textContent=pick(e); c.style.color=pick(col);
+      c.style.left=(10+Math.random()*80)+"%"; c.style.bottom=(20+Math.random()*30)+"%"; c.style.animationDelay=(Math.random()*.15)+"s";
+      box.appendChild(c); (function(x){ setTimeout(function(){ if(x.parentNode) x.parentNode.removeChild(x); },1200); })(c); } }
+  var toastT=null; function toast(t){ var el=$("toast"); el.textContent=t; el.classList.add("show"); if(toastT) clearTimeout(toastT); toastT=setTimeout(function(){ el.classList.remove("show"); },1800); }
+
+  $("gearBtn").addEventListener("click", function(){ renderDash(); $("overlay").classList.add("open"); });
+  $("doneBtn").addEventListener("click", function(){ $("overlay").classList.remove("open"); });
+  $("overlay").addEventListener("click", function(e){ if(e.target===$("overlay")) $("overlay").classList.remove("open"); });
+  function renderDash(){ var h='<div class="statline"><span>Skills mastered</span><b>'+masteredCount()+' / '+ALL.length+'</b></div>';
+    h+='<div class="statline"><span>Overall mastery</span><b>'+pct()+'%</b></div>';
+    var reps=0; for(var k in P.sk){ if(P.sk.hasOwnProperty(k)) reps+=(P.sk[k].reps||0); }
+    h+='<div class="statline"><span>Questions answered</span><b>'+reps+'</b></div>';
+    h+='<div class="statline"><span>Working on</span><b>'+(skById(firstUnmastered())||{}).name+'</b></div>'; $("dashStats").innerHTML=h; }
+  $("resetBtn").addEventListener("click", function(){ if(window.confirm("Reset all progress?")){ P={sk:{}}; persist(); renderDash(); render(); } });
+
+  render();
+  if("serviceWorker" in navigator){ window.addEventListener("load", function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); }); }
+})();
+</script>
+</body>
+</html>

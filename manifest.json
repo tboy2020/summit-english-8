@@ -1,0 +1,14 @@
+{
+  "name": "Summit English 8",
+  "short_name": "English 8",
+  "description": "Master Grade-8 reading, vocabulary, grammar and argument with instant explanations.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b1220",
+  "theme_color": "#0b1220",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
